@@ -1,0 +1,23 @@
+aopy - An Aspect Oriented Programming Python Framework 
+
+Author - Spencer Herzberg
+Author - Yuji Fujiki
+
+This framework was built for a graduate software engineering course in Aspect Oriented Programming.
+
+Requirements:
+
+    Build a Python AOP framework that corresponds with AspectJ
+    Joinpoint model
+    Pointcut definitions are meant to be simple
+    Advice: Before, After, Around
+    Before and after advice are very simple methods
+    Around advice is very flexible
+    Dynamic runtime changes
+    Security measures: define only methods that are "weave-able" 
+
+Future Work:
+
+    Build in regular expressions for more flexible and dynamic pointcuts
+    Additional pointcuts for advice.
+    Eclipse plugin for showing advised code blocks 
