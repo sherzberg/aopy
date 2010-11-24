@@ -21,3 +21,67 @@ Future Work:
     Build in regular expressions for more flexible and dynamic pointcuts
     Additional pointcuts for advice.
     Eclipse plugin for showing advised code blocks 
+
+
+
+
+How to Use:
+
+    Import aopy module (AOPWrapper, weaver)
+    Define your own aspect class by inheriting AOPWrapper
+    Optionally define Before, After, Around advice in aspect class
+    Set Before, After, Around advice in aspect class in aspect constructor
+    Set the pointcut for the aspect
+        Two ways:
+            Define in aspect constructor
+            Dynamically call AOPWrapper.setPointcut() on newly created aspect object 
+        Rules:
+            AOPWrapper.setPointcut(string, string, list)
+            Parameter 1: string name of the method you want to advise
+            Parameter 2: string number of arguments, 'asterisk' is any number of arguments
+            Parameter 3: list of keyword arguments, 'asterisk' is any keyword arguments 
+    Decorate all functions that you may want to advise with @weave decorator (imported from AOPy)
+
+Example Code:
+
+from aopy.core import weave,getPointcutter,AOPWrapper
+
+class Logger(AOPWrapper):
+    
+    def __init__(self,signature, numargs, kwargs):
+        AOPWrapper.__init__(self,signature, numargs, kwargs)
+        self.setBefore(self.before)
+        self.setAfter(self.after)
+        self.setAround(self.around)
+        
+    def before(self, *args, **kwargs):
+        print "before call"
+        
+    def after(self, retval, exc):
+        print "after call"
+        
+    def around(self,target, method, *args, **kwargs):
+        print "before around:",target,method, args, kwargs
+        ret = method(*args,**kwargs)
+        print "after around: ",ret
+        return ret
+ 
+@weave
+def run():
+    print "im running"       
+        
+def main():
+    
+    logger = Logger("run","0", ["*"])
+    print logger.signature
+    pc = getPointcutter()
+    pc.addPointcuter(logger)
+    
+    
+    run()
+    logger.setPointcut("notrun","0", ["*"])
+    run()
+    
+main()
+
+
