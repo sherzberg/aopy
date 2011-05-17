@@ -5,9 +5,11 @@ the use of aspects in Python in AspectJ style.
 __author__ =  'Spencer Herzberg, Yuji Fujiki'
 __version__=  '1.0'
 
+
 def p(*args, **kwargs):
     """Use as a placeholder function/method for AOPWrapper"""
     pass
+
 
 class InvalidParameters(Exception):
     """Error to raise when the parameters are incorrect for a method."""
@@ -83,7 +85,6 @@ class AOPWrapper:
         ret = self.advice_around(target, method, *args, **kwargs)
         return ret
     
-
     def setPointcut(self,pointcutsig,numargs,kwargs):
         """Sets the pointcut for the aspect
         
@@ -94,14 +95,7 @@ class AOPWrapper:
         
         Raises InvalidParameters error if this method is passed the incorrect arguement types
         """
-#        print self._parsePointcut(pointcutstring)
-#        pc = self._parsePointcut(pointcutstring)
-#        self.signature = pc[0]
-#        self.args = pc[1]
-#        self.kwargs = pc[2]
-#        print type(pointcutsig) == type("")
-#        print type(numargs) == type("") and (numargs.isdigit() or numargs=="*")
-#        print type(kwargs)==type([]) and len(kwargs)>0
+
         if not (type(pointcutsig) == type("")
            and type(numargs) == type("") and (numargs.isdigit() or numargs=="*")
            and type(kwargs)==type([]) and len(kwargs)>0
@@ -112,28 +106,20 @@ class AOPWrapper:
         self.args = str(numargs)
         self.kwargs = kwargs
         
-        
     def isPointcut(self, signature, args, kwargs):
-#        print "-"*40
         """Returns if the given signature is equal to the set pointcut"""
         
         sig = True if self.signature == "*" else self.signature == signature
-#        print "sig", sig
         arg = True if self.args=="*" else self.args == str(len(args))
-#        print "arg", arg
         
         if self.kwargs!=["*"]:
-#            numargs=len(kwargs)
-#            print type(kwargs),kwargs
             if (self.kwargs[0].isdigit()):
-                #
                 n = len(kwargs)
                 if(n==int(self.kwargs[0])):
                     kwarg=True
                 else:
                     kwarg=False
             else:
-#                print "got here"
                 self.kwargs.sort()
                 kwargs.sort()
                 
@@ -142,25 +128,13 @@ class AOPWrapper:
                 else: kwarg=False
         else:
             kwarg = True
-        
-#        print "kwarg", kwarg
+
         return sig and arg and kwarg
-    
-#    def _parsePointcut(self,pointcut):
-#        tmp = pointcut.split()
-#        if len(tmp)==1:
-#            return [tmp[0],"*",[]]
-#        else:
-#            return [tmp[0],tmp[1],tmp[2:]]
-    
-    
-    
 
 
 def weave(method, *args, **kwargs):
     """Decorator used to "weave" a method/function with the list of aspects"""
-    global pclist
-#    retval = method(*args, **kwargs)
+    global pclist #TODO: figure out how to get rid of this
     
     def invoke_advice(*args, **kwargs):
         found = False

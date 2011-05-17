@@ -1,10 +1,11 @@
 """This module contains a few default aspects"""
+
 __author__ =  'Spencer Herzberg, Yuji Fujiki'
 __version__=  '1.0'
 
-
 from core import AOPWrapper
 import os
+
 
 class Logger(AOPWrapper):
     
@@ -26,9 +27,7 @@ class Logger(AOPWrapper):
         print "\tafter around %s:" %self.signature,ret
         return ret
 
-    
-    
-    
+
 class Writer(AOPWrapper):
     """Writer aspect used to dynamically change the buffer size for a file read operation depending on the ram usage"""
     
@@ -54,5 +53,4 @@ class Writer(AOPWrapper):
         """
         AOPWrapper.__init__(self,signature, numargs, kwargs)
         self.setAround(self.intercept)
-        
-#        self.setPointcut("write", "3",["0"])
+
