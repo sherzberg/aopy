@@ -3,20 +3,18 @@ aopy - An Aspect Oriented Programming Python Framework
 Author - Spencer Herzberg
 Author - Yuji Fujiki
 
-Last Updated - 2011-05-09
-
 This framework was built for a graduate software engineering course in Aspect Oriented Programming.
 
 Requirements:
 
-    Build a Python AOP framework that corresponds with AspectJ
+    Build a Python AOP framework that corresponds with AspectJ - http://www.eclipse.org/aspectj
     Joinpoint model
     Pointcut definitions are meant to be simple
     Advice: Before, After, Around
     Before and after advice are very simple methods
     Around advice is very flexible
-    Dynamic runtime changes
-    Security measures: define only methods that are "weave-able" 
+    Dynamic runtime changes to joinpoints
+    Security measures: define only methods that are "weave-able"
 
 Future Work:
 
@@ -29,11 +27,11 @@ Future Work:
 
 How to Use:
 
-    Import aopy module (AOPWrapper, weaver)
-    Define your own aspect class by inheriting AOPWrapper
-    Optionally define Before, After, Around advice in aspect class
-    Set Before, After, Around advice in aspect class in aspect constructor
-    Set the pointcut for the aspect
+    1) Import aopy module (AOPWrapper, weaver)
+    2) Define your own aspect class by inheriting AOPWrapper
+    3) Optionally define Before, After, Around advice in aspect class
+    4) Set Before, After, Around advice in aspect class in aspect constructor
+    5) Set the pointcut for the aspect
         Two ways:
             Define in aspect constructor
             Dynamically call AOPWrapper.setPointcut() on newly created aspect object 
@@ -42,11 +40,13 @@ How to Use:
             Parameter 1: string name of the method you want to advise
             Parameter 2: string number of arguments, 'asterisk' is any number of arguments
             Parameter 3: list of keyword arguments, 'asterisk' is any keyword arguments 
-    Decorate all functions that you may want to advise with @weave decorator (imported from AOPy)
+    6)Decorate all functions that you may want to advise with @weave decorator (imported from AOPy)
 
 Example Code:
 
+
 from aopy.core import weave,getPointcutter,AOPWrapper
+
 
 class Logger(AOPWrapper):
     
@@ -67,23 +67,30 @@ class Logger(AOPWrapper):
         ret = method(*args,**kwargs)
         print "after around: ",ret
         return ret
- 
+
+
 @weave
 def run():
-    print "im running"       
-        
+    print "I'm running"       
+
+
 def main():
     
+    #setup logger aspect for all methods named run
+    #with no args and any kwargs
     logger = Logger("run","0", ["*"])
-    print logger.signature
+
+    #setup pointcutter singleton
     pc = getPointcutter()
+    
+    #add the logger aspect
     pc.addPointcuter(logger)
     
-    
     run()
+    
+    #runtime reset of logger aspect to a new pointcut
+    #the next run call to run() will not be advised
     logger.setPointcut("notrun","0", ["*"])
     run()
     
 main()
-
-
